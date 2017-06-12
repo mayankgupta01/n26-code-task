@@ -22,11 +22,23 @@ import java.util.concurrent.atomic.DoubleAdder;
 public class TransactionManager {
 
     protected final Queue<Transaction> incomingTxQueue;
+
+    // Ordered Map of transactions by timestamp bucketed by each millisecond. Key = epoch, Value = Aggregated stats for the millisecond
+    // This will ensure that max number of keys at any time will be 60k, ensuring worse time complexity of logn for maintaining
+    // the DS.
     protected final ConcurrentSkipListMap<Long,Statistics> sortedByTimeMap;
+
+    // Ordered set of transactions by transaction amount to calculate min and max. Transaction with same timestamp and amount
+    // are considered duplicate
     protected final ConcurrentSkipListSet<Transaction> sortedByAmtSet;
+
+    // DS to maintain history of all transactions inserted to service
     protected final List<Transaction> txHistory;
 
+    //Atomic double to ensure threadsafe view of sum
     protected DoubleAdder sum;
+
+    //AtomicLong to ensure threadsafe view of count
     protected AtomicLong count;
 
     public TransactionManager() {
