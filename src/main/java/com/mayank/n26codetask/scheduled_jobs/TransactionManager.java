@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.DoubleAdder;
 @Service
 public class TransactionManager {
 
+    // Queue to store incoming transactions
     protected final Queue<Transaction> incomingTxQueue;
 
     // Ordered Map of transactions by timestamp bucketed by each millisecond. Key = epoch, Value = Aggregated stats for the millisecond
@@ -53,6 +54,10 @@ public class TransactionManager {
 
     public void addTransaction(Transaction tx) {
         incomingTxQueue.add(tx);
+        addToTransactionHistory(tx);
+    }
+
+    public void addToTransactionHistory(Transaction tx) {
         txHistory.add(tx);
     }
 

@@ -46,9 +46,10 @@ public class TransactionService {
     }
 
     public boolean insert(Transaction tx) {
-        logger.info(" PAST TIMESTAMP : " + EpochConverter.getPastTimestamp(appProps.getCalculateStatsForSec()) + " : " + System.currentTimeMillis() +" , Transaction Timestamp : " + tx.getEpoch());
+
         if(EpochConverter.getPastTimestamp(appProps.getCalculateStatsForSec()) > tx.getEpoch()) {
-            logger.info("Transaction is older than 60 secs");
+            logger.info("Transaction is older than 60 secs, addintg to history, discarding from stats calculation !");
+            manager.addToTransactionHistory(tx);
             return false;
         }
 

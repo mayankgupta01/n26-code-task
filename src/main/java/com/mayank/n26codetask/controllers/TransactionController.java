@@ -37,8 +37,7 @@ public class TransactionController {
     @RequestMapping(value = "/transaction", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON)
     public ResponseEntity<Void> transaction(@Valid @NotNull @RequestBody Transaction tx) {
 
-//      TODO: For some reason the javax.validation is not working. json keys and null check not working on requestbody, hence, doing manual validation below(hack). Need to fix
-        if(tx.getEpoch() <= 0 || tx.getAmount() <= 0)
+        if(!validTransactionToProcess(tx))
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 
         return txService.insert(tx) ? new ResponseEntity<Void>(HttpStatus.CREATED) :
@@ -51,5 +50,17 @@ public class TransactionController {
 
         Statistics statistics = txService.getStatistics();
         return new ResponseEntity<>(statistics,HttpStatus.OK);
+    }
+
+
+    //      TODO: For some reason the javax.validation is not working. json keys and null check not working on requestbody, hence, doing manual validation below. Needs fixing
+    private boolean validTransactionToProcess(Transaction tx) {
+        if(tx == null)
+            return false;
+
+        if(tx.getEpoch() <= 0 || tx.getAmount() <= 0)
+            return false;
+
+        return true;
     }
 }

@@ -27,11 +27,11 @@ public class GCWorkerThread implements Runnable {
     public void run() {
 
         long lastAllowedTimeStamp = EpochConverter.getPastTimestamp(appProps.getCalculateStatsForSec());
-        removeOldTxAndUpdateSum(lastAllowedTimeStamp);
-        updateMinMax(lastAllowedTimeStamp);
+        removeExpiredTxAndUpdateTotalSum(lastAllowedTimeStamp);
+        updateMinMaxAmount(lastAllowedTimeStamp);
     }
 
-    private void removeOldTxAndUpdateSum(long lastAllowedTimeStamp) {
+    private void removeExpiredTxAndUpdateTotalSum(long lastAllowedTimeStamp) {
 
         while(entryExpired(lastAllowedTimeStamp)) {
 
@@ -39,25 +39,25 @@ public class GCWorkerThread implements Runnable {
             manager.sum.add(-stats.getSum());
             manager.count.addAndGet(-stats.getCount());
 
-            logger.info("Expired transactions : " +  stats.getSum() + " Num of occurences : " + stats.getCount());
+            logger.info("Expired transactions summary : " +  stats.getSum() + " Count of txs : " + stats.getCount());
 
         }
     }
 
 
 
-    private void updateMinMax(long lastAllowedTimeStamp) {
+    private void updateMinMaxAmount(long lastAllowedTimeStamp) {
 
         ConcurrentSkipListSet<Transaction> sortedByAmt = manager.sortedByAmtSet;
 
         while(shouldRemoveHead(sortedByAmt,lastAllowedTimeStamp)) {
             Transaction minTx = sortedByAmt.pollFirst();
-            logger.info("Removing min tx with amount from amount set :" + minTx.getAmount() + " : " + minTx.getEpoch());
+            logger.info("Expired min tx with amount from amount set :" + minTx.getAmount() + " : " + minTx.getEpoch());
         }
 
         while(shouldRemoveTail(sortedByAmt,lastAllowedTimeStamp)) {
             Transaction maxTx = sortedByAmt.pollLast();
-            logger.info("Removing  max tx with amount from amount set :" + maxTx.getAmount() + " : " + maxTx.getEpoch());
+            logger.info("Expired  max tx with amount from amount set :" + maxTx.getAmount() + " : " + maxTx.getEpoch());
         }
     }
 

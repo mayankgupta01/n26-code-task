@@ -38,12 +38,6 @@ public class IncomingTnxConsumerThread implements Runnable {
             updateSumAndCount(tx);
             addToSortedTimeMap(tx);
             manager.sortedByAmtSet.add(tx);
-
-
-
-            logger.info("Final numbers are : Sum = " + manager.sum.doubleValue() + " , Count = " + manager.count.get()
-                    + ", min = " + manager.sortedByAmtSet.first().getAmount() + ", max = "
-                    + manager.sortedByAmtSet.last().getAmount());
         }
     }
 
@@ -52,16 +46,12 @@ public class IncomingTnxConsumerThread implements Runnable {
         long txTime = tx.getEpoch();
         double txAmount = tx.getAmount();
 
-        for(Map.Entry<Long,Statistics> entry : manager.sortedByTimeMap.entrySet()) {
-            logger.info("Time map :" + entry.getKey() + " : " +   entry.getValue().getCount() + " : " + entry.getValue().getSum());
-        }
-
         if(manager.sortedByTimeMap.containsKey(txTime)) {
-            logger.info("Adding to existing key");
+            logger.info("Adding to existing key :" + txTime +  ", " + txAmount);
             manager.sortedByTimeMap.get(txTime).addSum(tx.getAmount());
             manager.sortedByTimeMap.get(txTime).addCount((long)1);
         }else {
-            logger.info("Adding new key");
+            logger.info("Adding new key :" + txTime +  ", " + txAmount);
             Statistics stats = new Statistics(txAmount,1);
             manager.sortedByTimeMap.put(txTime,stats);
         }
