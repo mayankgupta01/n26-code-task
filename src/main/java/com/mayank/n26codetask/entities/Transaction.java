@@ -2,6 +2,7 @@ package com.mayank.n26codetask.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -11,11 +12,13 @@ public class Transaction {
 
 
     @NotNull
+    @Valid
     @JsonProperty(value = "amount", required = true)
     private double amount;
 
 
     @NotNull
+    @Valid
     @JsonProperty(value = "timestamp", required = true)
     private long epoch;
 

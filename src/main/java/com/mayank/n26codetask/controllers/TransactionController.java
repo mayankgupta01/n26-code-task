@@ -8,8 +8,8 @@ import com.mayank.n26codetask.services.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Created by mayank.gupta on 10/06/17.
@@ -32,12 +33,17 @@ public class TransactionController {
         this.txService = service;
     }
 
+    @Validated
+    @RequestMapping(value = "/transaction", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON)
+    public ResponseEntity<Void> transaction(@Valid @NotNull @RequestBody Transaction tx) {
 
-    @RequestMapping(value = "/transaction", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> transaction(@Valid @RequestBody Transaction tx) {
+//      TODO: For some reason the javax.validation is not working. json keys and null check not working on requestbody, hence, doing manual validation below(hack). Need to fix
+        if(tx.getEpoch() <= 0 || tx.getAmount() <= 0)
+            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 
-        boolean validTx = txService.insert(tx);
-        return validTx ? new ResponseEntity<Void>(HttpStatus.CREATED) : new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return txService.insert(tx) ? new ResponseEntity<Void>(HttpStatus.CREATED) :
+                new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+
     }
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
