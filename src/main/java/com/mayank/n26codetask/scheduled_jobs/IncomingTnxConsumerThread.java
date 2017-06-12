@@ -15,24 +15,13 @@ import java.util.Map;
  */
 public class IncomingTnxConsumerThread implements Runnable {
 
+    @Autowired
     private TransactionManager manager;
+
+    @Autowired
     private AppProperties appProps;
+
     private Logger logger = LoggerFactory.getLogger(IncomingTnxConsumerThread.class);
-
-    public IncomingTnxConsumerThread() {
-
-    }
-
-
-    @Autowired
-    public void setManager(TransactionManager manager) {
-        this.manager = manager;
-    }
-
-    @Autowired
-    public void setAppProps(AppProperties appProps) {
-        this.appProps = appProps;
-    }
 
     @Override
     public void run() {
@@ -59,6 +48,7 @@ public class IncomingTnxConsumerThread implements Runnable {
     }
 
     private void addToSortedTimeMap(Transaction tx) {
+
         long txTime = tx.getEpoch();
         double txAmount = tx.getAmount();
 
@@ -78,11 +68,9 @@ public class IncomingTnxConsumerThread implements Runnable {
     }
 
     private void updateSumAndCount(Transaction tx) {
+
         manager.sum.add(tx.getAmount());
         manager.count.getAndIncrement();
     }
-
-
-
 
 }

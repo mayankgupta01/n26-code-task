@@ -8,6 +8,7 @@ import com.mayank.n26codetask.services.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,16 +32,17 @@ public class TransactionController {
         this.txService = service;
     }
 
-    /*TO DO : Add conditions that amount and transaction time cannot be null*/
 
-    @RequestMapping(value = "/transaction", method = RequestMethod.POST)
-    public ResponseEntity<Void> transaction(@NotNull @Valid @RequestBody  Transaction tx) {
+    @RequestMapping(value = "/transaction", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> transaction(@Valid @RequestBody Transaction tx) {
+
         boolean validTx = txService.insert(tx);
         return validTx ? new ResponseEntity<Void>(HttpStatus.CREATED) : new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/statistics", method = RequestMethod.GET)
     public ResponseEntity<Statistics> getstatistics() {
+
         Statistics statistics = txService.getStatistics();
         return new ResponseEntity<>(statistics,HttpStatus.OK);
     }

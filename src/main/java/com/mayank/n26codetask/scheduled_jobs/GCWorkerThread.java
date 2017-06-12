@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
@@ -17,21 +15,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class GCWorkerThread implements Runnable {
 
-
+    @Autowired
     private TransactionManager manager;
-    private Logger logger = LoggerFactory.getLogger(IncomingTnxConsumerThread.class);
-    private Transaction dummyTx;
+
+    @Autowired
     private AppProperties appProps;
 
-    @Autowired
-    public void setManager(TransactionManager manager) {
-        this.manager = manager;
-    }
-
-    @Autowired
-    public void setAppProps(AppProperties appProps) {
-        this.appProps = appProps;
-    }
+    private Logger logger = LoggerFactory.getLogger(IncomingTnxConsumerThread.class);
 
     @Override
     public void run() {

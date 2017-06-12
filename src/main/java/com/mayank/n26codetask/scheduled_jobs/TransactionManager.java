@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.DoubleAdder;
 public class TransactionManager {
 
     protected final Queue<Transaction> incomingTxQueue;
-    // Change this to protected after debugging
     protected final ConcurrentSkipListMap<Long,Statistics> sortedByTimeMap;
     protected final ConcurrentSkipListSet<Transaction> sortedByAmtSet;
     protected final List<Transaction> txHistory;
@@ -39,21 +38,24 @@ public class TransactionManager {
         this.count = new AtomicLong(0);
     }
 
-    public void addToInboundTxQueue(Transaction tx) {
+
+    public void addTransaction(Transaction tx) {
         incomingTxQueue.add(tx);
         txHistory.add(tx);
     }
 
 
-    public double getSum() {
+    public double getTransactionsAmountTotal() {
         return sum.doubleValue();
     }
 
-    public long getCount() {
+
+    public long getTransactionsCount() {
         return count.get();
     }
 
-    public double getMinAmount() {
+
+    public double getTransactionMinAmount() {
         double minAmount = 0;
 
         if(!sortedByAmtSet.isEmpty()) {
@@ -63,7 +65,8 @@ public class TransactionManager {
         return minAmount;
     }
 
-    public double getMaxAmount() {
+
+    public double getTransactionMaxAmount() {
         double maxAmount = 0;
 
         if(!sortedByAmtSet.isEmpty()) {
@@ -72,6 +75,5 @@ public class TransactionManager {
 
         return maxAmount;
     }
-
 
 }

@@ -24,20 +24,19 @@ public class TransactionService {
     private final ScheduledExecutorService executor;
     private final IncomingTnxConsumerThread adder;
     private final GCWorkerThread maintainer;
-    private final TransactionManager manager;
+
+    @Autowired
+    private TransactionManager manager;
+
+    @Autowired
     private AppProperties appProps;
+
     private Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
-    public TransactionService(IncomingTnxConsumerThread adder, GCWorkerThread maintainer, TransactionManager manager) {
+    public TransactionService(IncomingTnxConsumerThread adder, GCWorkerThread maintainer) {
         executor = Executors.newScheduledThreadPool(2);
         this.adder = adder;
         this.maintainer = maintainer;
-        this.manager = manager;
-    }
-
-    @Autowired
-    public void setAppProps(AppProperties appProps) {
-        this.appProps = appProps;
     }
 
     @PostConstruct
@@ -53,15 +52,15 @@ public class TransactionService {
             return false;
         }
 
-        manager.addToInboundTxQueue(tx);
+        manager.addTransaction(tx);
         return true;
     }
 
     public Statistics getStatistics() {
-        double min = manager.getMinAmount();
-        double max = manager.getMaxAmount();
-        double sum = manager.getSum();
-        long count = manager.getCount();
+        double min = manager.getTransactionMinAmount();
+        double max = manager.getTransactionMaxAmount();
+        double sum = manager.getTransactionsAmountTotal();
+        long count = manager.getTransactionsCount();
         double avg = count == 0 ? 0 : sum/count;
 
         Statistics statistics = new Statistics(sum,count);

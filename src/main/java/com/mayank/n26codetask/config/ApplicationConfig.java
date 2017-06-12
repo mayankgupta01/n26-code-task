@@ -2,7 +2,6 @@ package com.mayank.n26codetask.config;
 
 import com.mayank.n26codetask.scheduled_jobs.IncomingTnxConsumerThread;
 import com.mayank.n26codetask.scheduled_jobs.GCWorkerThread;
-import com.mayank.n26codetask.scheduled_jobs.TransactionManager;
 import com.mayank.n26codetask.services.TransactionService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,12 +18,7 @@ public class ApplicationConfig {
 
     @Bean
     public TransactionService transactionService() {
-        return new TransactionService(incomingTnxConsumer(),maintainerWorker(),transactionManager());
-    }
-
-    @Bean
-    public TransactionManager transactionManager() {
-        return new TransactionManager();
+        return new TransactionService(incomingTnxConsumer(),maintainerWorker());
     }
 
     @Bean
