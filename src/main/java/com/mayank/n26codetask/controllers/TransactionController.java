@@ -45,7 +45,7 @@ public class TransactionController {
 
     }
 
-    @RequestMapping(value = "/statistics", method = RequestMethod.GET)
+    @RequestMapping(value = "/statistics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<Statistics> getstatistics() {
 
         Statistics statistics = txService.getStatistics();
