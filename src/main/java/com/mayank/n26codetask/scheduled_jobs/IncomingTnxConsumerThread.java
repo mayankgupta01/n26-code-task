@@ -57,9 +57,6 @@ public class IncomingTnxConsumerThread implements Runnable {
 
     private void updateSumAndCount(Transaction tx) {
 
-        /*manager.sum.add(tx.getAmount());
-        manager.count.getAndIncrement();
-        */
         manager.setStatsSnapshot(tx.getAmount(),1);
     }
 

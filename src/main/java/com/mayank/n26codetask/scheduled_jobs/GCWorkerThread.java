@@ -39,10 +39,6 @@ public class GCWorkerThread implements Runnable {
         while(entryExpired(lastAllowedTimeStamp)) {
 
             Statistics stats = manager.sortedByTimeMap.pollFirstEntry().getValue();
-         /*
-         manager.sum.add(-stats.getSum());
-         manager.count.addAndGet(-stats.getCount());
-         */
             expiredSum += stats.getSum();
             expiredTxCount += stats.getCount();
             logger.info("Expired transactions summary : " +  stats.getSum() + " Count of txs : " + stats.getCount());
