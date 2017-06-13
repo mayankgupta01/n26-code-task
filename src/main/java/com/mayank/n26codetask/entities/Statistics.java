@@ -13,11 +13,11 @@ public class Statistics {
 
     @NotNull
     @JsonProperty(value = "sum", required = true)
-    private DoubleAdder sum;
+    private double sum;
 
     @NotNull
     @JsonProperty(value = "count", required = true)
-    private AtomicLong count;
+    private long count;
 
     @NotNull
     @JsonProperty(value = "avg", required = true)
@@ -42,19 +42,19 @@ public class Statistics {
 
 
     public double getSum() {
-        return sum.doubleValue();
+        return sum;
     }
 
     public void addSum(double sum) {
-        this.sum.add(sum);
+        this.sum += sum;
     }
 
     public long getCount() {
-        return count.longValue();
+        return count;
     }
 
     public void addCount(Long count) {
-        this.count.addAndGet(count);
+        this.count += count;
     }
 
     public double getAverage() {
@@ -85,9 +85,9 @@ public class Statistics {
     public static class Builder {
 
 
-        private DoubleAdder sum;
+        private double sum;
 
-        private AtomicLong count;
+        private long count;
 
         private double average;
 
@@ -96,11 +96,8 @@ public class Statistics {
         private double maxAmount;
 
         public Builder(double sum, long count) {
-            this.sum = new DoubleAdder();
-            this.count = new AtomicLong(0);
-            this.sum.add(sum);
-            this.count.addAndGet(count);
-
+            this.sum = sum;
+            this.count = count;
             this.average = sum == 0 || count == 0 ? 0 : sum/count;
         }
 

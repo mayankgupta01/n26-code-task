@@ -33,9 +33,9 @@ public class IncomingTnxConsumerThread implements Runnable {
     private void updateStatistics(Transaction tx) {
 
         if(tx.getEpoch() > EpochConverter.getPastTimestamp(appProps.getCalculateStatsForSec())) {
+            manager.sortedByAmtSet.add(tx);
             updateSumAndCount(tx);
             addToSortedTimeMap(tx);
-            manager.sortedByAmtSet.add(tx);
         }
     }
 
@@ -57,8 +57,10 @@ public class IncomingTnxConsumerThread implements Runnable {
 
     private void updateSumAndCount(Transaction tx) {
 
-        manager.sum.add(tx.getAmount());
+        /*manager.sum.add(tx.getAmount());
         manager.count.getAndIncrement();
+        */
+        manager.setStatsSnapshot(tx.getAmount(),1);
     }
 
 }

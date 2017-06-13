@@ -11,8 +11,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.DoubleAdder;
 
 
 /**
@@ -36,19 +34,19 @@ public class TransactionManager {
     // DS to maintain history of all transactions inserted to service
     protected final List<Transaction> txHistory;
 
-    //Atomic double to ensure threadsafe view of sum
-    protected DoubleAdder sum;
 
-    //AtomicLong to ensure threadsafe view of count
-    protected AtomicLong count;
+    private Statistics statsSnapshot;
 
     public TransactionManager() {
         incomingTxQueue = new ConcurrentLinkedQueue<>();
         sortedByTimeMap = new ConcurrentSkipListMap<>();
         sortedByAmtSet = new ConcurrentSkipListSet<>(TransactionComparator.AMOUNT);
         txHistory = new LinkedList<>();
-        this.sum = new DoubleAdder();
-        this.count = new AtomicLong(0);
+        statsSnapshot = new Statistics.Builder(0,0)
+                .setMinAmount(0)
+                .setMaxAmount(0)
+                .build();
+
     }
 
 
@@ -62,21 +60,18 @@ public class TransactionManager {
     }
 
     public Statistics getStatsSnapShot() {
-        return new Statistics.Builder(getTransactionsAmountTotal(),getTransactionsCount())
-                .setMinAmount(getTransactionMinAmount())
+        return statsSnapshot;
+    }
+
+    protected synchronized void setStatsSnapshot(double deltaAmount, long deltaCount) {
+
+        double newSum = statsSnapshot.getSum()+deltaAmount;
+        long newCOunt = statsSnapshot.getCount() + deltaCount;
+
+        statsSnapshot = new Statistics.Builder(newSum,newCOunt).setMinAmount(getTransactionMinAmount())
                 .setMaxAmount(getTransactionMaxAmount())
                 .build();
     }
-
-    private double getTransactionsAmountTotal() {
-        return sum.doubleValue();
-    }
-
-
-    private long getTransactionsCount() {
-        return count.get();
-    }
-
 
     private double getTransactionMinAmount() {
         double minAmount = 0;
@@ -98,5 +93,4 @@ public class TransactionManager {
 
         return maxAmount;
     }
-
 }
