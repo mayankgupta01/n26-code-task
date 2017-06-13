@@ -1,4 +1,4 @@
-package com.mayank.n26codetask.entities;
+package com.mayank.n26codetask.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

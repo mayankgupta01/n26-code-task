@@ -1,5 +1,6 @@
 package com.mayank.n26codetask.services;
 
+import com.mayank.n26codetask.config.AppProperties;
 import com.mayank.n26codetask.entities.*;
 import com.mayank.n26codetask.scheduled_jobs.GCWorkerThread;
 import com.mayank.n26codetask.scheduled_jobs.IncomingTnxConsumerThread;
@@ -58,18 +59,7 @@ public class TransactionService {
     }
 
     public Statistics getStatistics() {
-        double min = manager.getTransactionMinAmount();
-        double max = manager.getTransactionMaxAmount();
-        double sum = manager.getTransactionsAmountTotal();
-        long count = manager.getTransactionsCount();
-        double avg = count == 0 ? 0 : sum/count;
-
-        Statistics statistics = new Statistics(sum,count);
-        statistics.setMinAmount(min);
-        statistics.setMaxAmount(max);
-        statistics.setAverage(avg);
-
-        return statistics;
+        return manager.getStatsSnapShot();
     }
 
 

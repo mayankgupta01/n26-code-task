@@ -1,6 +1,6 @@
 package com.mayank.n26codetask.scheduled_jobs;
 
-import com.mayank.n26codetask.entities.AppProperties;
+import com.mayank.n26codetask.config.AppProperties;
 import com.mayank.n26codetask.entities.Statistics;
 import com.mayank.n26codetask.entities.Transaction;
 import com.mayank.n26codetask.utilities.EpochConverter;

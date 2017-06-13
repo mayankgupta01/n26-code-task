@@ -61,18 +61,24 @@ public class TransactionManager {
         txHistory.add(tx);
     }
 
+    public Statistics getStatsSnapShot() {
+        return new Statistics.Builder(getTransactionsAmountTotal(),getTransactionsCount())
+                .setMinAmount(getTransactionMinAmount())
+                .setMaxAmount(getTransactionMaxAmount())
+                .build();
+    }
 
-    public double getTransactionsAmountTotal() {
+    private double getTransactionsAmountTotal() {
         return sum.doubleValue();
     }
 
 
-    public long getTransactionsCount() {
+    private long getTransactionsCount() {
         return count.get();
     }
 
 
-    public double getTransactionMinAmount() {
+    private double getTransactionMinAmount() {
         double minAmount = 0;
 
         if(!sortedByAmtSet.isEmpty()) {
@@ -83,7 +89,7 @@ public class TransactionManager {
     }
 
 
-    public double getTransactionMaxAmount() {
+    private double getTransactionMaxAmount() {
         double maxAmount = 0;
 
         if(!sortedByAmtSet.isEmpty()) {

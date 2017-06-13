@@ -92,7 +92,7 @@ public class TransactionControllerTests {
     @Test
     public void expect200ResponseForGetStatistics() {
 
-        Statistics stats = new Statistics(100,10);
+        Statistics stats = new Statistics.Builder(100,10).build();
         when(txService.getStatistics()).thenReturn(stats);
 
         ResponseEntity<Statistics> responseEntity;

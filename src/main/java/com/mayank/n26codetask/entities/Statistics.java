@@ -31,12 +31,15 @@ public class Statistics {
     @JsonProperty(value = "max", required = true)
     private double maxAmount;
 
-    public Statistics(double sum, long count) {
-        this.sum = new DoubleAdder();
-        this.count = new AtomicLong(0);
-        this.sum.add(sum);
-        this.count.addAndGet(count);
+    private Statistics(Builder builder) {
+        this.sum = builder.sum;
+        this.count = builder.count;
+        this.average = builder.average;
+        this.maxAmount = builder.maxAmount;
+        this.minAmount = builder.minAmount;
     }
+
+
 
     public double getSum() {
         return sum.doubleValue();
@@ -76,5 +79,43 @@ public class Statistics {
 
     public void setMaxAmount(double maxAmount) {
         this.maxAmount = maxAmount;
+    }
+
+
+    public static class Builder {
+
+
+        private DoubleAdder sum;
+
+        private AtomicLong count;
+
+        private double average;
+
+        private double minAmount;
+
+        private double maxAmount;
+
+        public Builder(double sum, long count) {
+            this.sum = new DoubleAdder();
+            this.count = new AtomicLong(0);
+            this.sum.add(sum);
+            this.count.addAndGet(count);
+
+            this.average = sum == 0 || count == 0 ? 0 : sum/count;
+        }
+
+        public Builder setMinAmount(double minAmount) {
+            this.minAmount = minAmount;
+            return this;
+        }
+
+        public Builder setMaxAmount(double maxAmount) {
+            this.maxAmount = maxAmount;
+            return this;
+        }
+
+        public Statistics build() {
+            return new Statistics(this);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.mayank.n26codetask.services;
 
-import com.mayank.n26codetask.entities.AppProperties;
+import com.mayank.n26codetask.config.AppProperties;
 import com.mayank.n26codetask.entities.Transaction;
 import com.mayank.n26codetask.scheduled_jobs.GCWorkerThread;
 import com.mayank.n26codetask.scheduled_jobs.IncomingTnxConsumerThread;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

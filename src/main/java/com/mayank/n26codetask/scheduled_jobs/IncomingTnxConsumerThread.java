@@ -1,14 +1,12 @@
 package com.mayank.n26codetask.scheduled_jobs;
 
-import com.mayank.n26codetask.entities.AppProperties;
+import com.mayank.n26codetask.config.AppProperties;
 import com.mayank.n26codetask.entities.Statistics;
 import com.mayank.n26codetask.entities.Transaction;
 import com.mayank.n26codetask.utilities.EpochConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Map;
 
 /**
  * Created by mayank.gupta on 10/06/17.
@@ -52,7 +50,7 @@ public class IncomingTnxConsumerThread implements Runnable {
             manager.sortedByTimeMap.get(txTime).addCount((long)1);
         }else {
             logger.info("Adding new key :" + txTime +  ", " + txAmount);
-            Statistics stats = new Statistics(txAmount,1);
+            Statistics stats =  new Statistics.Builder(txAmount,1).build();
             manager.sortedByTimeMap.put(txTime,stats);
         }
     }
